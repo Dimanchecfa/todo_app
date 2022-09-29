@@ -24,7 +24,8 @@ import Toast from "react-native-toast-message";
 const Tab = createBottomTabNavigator();
 
 const HEIGHT = Dimensions.get("window").height;
-const Home = () => {
+const Home = ({navigation}) => {
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -76,7 +77,7 @@ const Home = () => {
         </View>
       </SafeAreaView>
       <View style={styles.body}>
-        <Text style={styles.body_text}>Mes tâches favoris</Text>
+
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
@@ -86,9 +87,17 @@ const Home = () => {
           />
         </ScrollView>
       </View>
+
+
+
+
+
+
       <Tab.Navigator
+
         initialRouteName={"Add"}
         screenOptions={({ route }) => ({
+            tabBarHideOnKeyboard: true,
          tabBarShowLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -119,7 +128,7 @@ const Home = () => {
             elevation: 0,
             marginHorizontal: 15,
             right: 20,
-            bottom: 20,
+
             borderRadius: 15,
             maxHeight: 100,
             height: 70,
@@ -153,7 +162,9 @@ const Home = () => {
                 color={focused ? COLORS.white : COLORS.white}
               />
             ),
-            tabBarButton: (props) => <CustomTabBarButton {...props}/>,
+            tabBarButton: (props) => <CustomTabBarButton {...props} onPress={() => {
+                navigation.navigate("Add")
+            }} />,
           }}
         />
         <Tab.Screen
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     alignItems: "center",
     display: "flex",
-    height: HEIGHT * 0.15,
+    height: HEIGHT * 0.14,
     flexDirection: "row",
     boxShadow: "10px 10px 10px #000",
     position: "absolute",
@@ -234,7 +245,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-const CustomTabBarButton = ({ children , navigation}) => (
+const CustomTabBarButton = ({ children , onPress}) => (
     <TouchableOpacity
         style={{
           top: -30,
@@ -242,7 +253,7 @@ const CustomTabBarButton = ({ children , navigation}) => (
           alignItems: "center",
           ...styles.shadow,
         }}
-        onPress={()=> { navigation.navigate('Add')}}
+        onPress={onPress}
     >
       <View
           style={{

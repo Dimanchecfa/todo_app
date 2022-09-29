@@ -1,6 +1,6 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React from "react";
-import { Text, View , StyleSheet  } from "react-native";
+import {Text, View, StyleSheet, Keyboard} from "react-native";
 import Input from "../../components/Input";
 import COLORS from "../../theme/color";
 import {HEIGHT} from "react-native-toast-message/lib/src/components/BaseToast.styles";
@@ -15,6 +15,7 @@ const AddTodo = () => {
     const [error, setError] = React.useState({});
     const [inputs, setInputs] = React.useState({
         title: "",
+        description: "",
         isCompleted: false,
         isFavorite: false,
     })
@@ -25,35 +26,37 @@ const AddTodo = () => {
         setError((prevState) => ({...prevState, [input]: error}));
     }
     const validate = async () => {
+        Keyboard.dismiss();
         setLoading(true);
-        const {title, isCompleted, isFavorite} = inputs;
+        const {title, isCompleted, isFavorite, description} = inputs;
         let error = {};
         if (!title) {
             error = {
                 title: !title ? "Le titre est requis" : "",
+
             }
             return setError(error);
         }
         const todo = {
             title,
-            isCompleted,
-            isFavorite,
-            date: new Date().getTime(),
+            description,
+            isCompleted : false,
+            isFavorite : false,
+            date: new Date().toISOString(),
 
         }
 
         console.log(todo);
         try {
           await addDoc(collection(db, "todo"), todo);
-          setTimeout(() => {
-                setLoading(false);
-
-          }, 2000);
+          setLoading(false);
           setInputs(
               inputs.title = "",
+                inputs.description = "",
           )}
         catch (e) {
             console.log(e);
+            setLoading(false);
         }
 
     }
@@ -68,16 +71,28 @@ const AddTodo = () => {
           </Text>
           <View style={styles.view}>
 
-              <Input
-                    placeholder="Nom de la tâche"
-                    iconName="text"
-                    label="Nom de la tâche"
+                <Input
+                    placeholder="Ajouter un titre"
                     value={inputs.title}
+                    label={"Titre"}
                     onChangeText={(text) => handleOnchange(text, "title")}
-                    onFocus={() => handleErrors(null, "title")}
                     error={error.title}
+                    onBlur={() => handleErrors("", "title")}
+                />
+
+              <Input
+                    placeholder="Prendre des notes"
+                    iconName="text"
+                    label="Description"
+                    value={inputs.description}
+                    onChangeText={(text) => handleOnchange(text, "description")}
+                    onFocus={() => handleErrors(null, "description")}
+                    error={error.description}
+                    isMultiline={true}
+
 
                 />
+
               <Button title={"Ajouter"} onPress={validate} />
 
           </View>
@@ -107,6 +122,8 @@ const styles = StyleSheet.create({
       marginTop: 20,
 
         flex: 1,
+
+
 
 
         width: "100%",
