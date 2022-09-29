@@ -153,7 +153,7 @@ const Home = () => {
                 color={focused ? COLORS.white : COLORS.white}
               />
             ),
-            tabBarButton: (props) => <CustomTabBarButton {...props} />,
+            tabBarButton: (props) => <CustomTabBarButton {...props}/>,
           }}
         />
         <Tab.Screen
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
-const CustomTabBarButton = ({ children, onPress }) => (
+const CustomTabBarButton = ({ children , navigation}) => (
     <TouchableOpacity
         style={{
           top: -30,
@@ -242,14 +242,14 @@ const CustomTabBarButton = ({ children, onPress }) => (
           alignItems: "center",
           ...styles.shadow,
         }}
-        onPress={(onPress = { onPress })}
+        onPress={()=> { navigation.navigate('Add')}}
     >
       <View
           style={{
             width: 70,
             height: 70,
             borderRadius: 35,
-            backgroundColor: COLORS.blue,
+            backgroundColor: COLORS.green
           }}
       >
         {children}

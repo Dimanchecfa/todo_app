@@ -15,12 +15,10 @@ import Loader from "../../../components/Loader";
 import COLORS from "../../../theme/color";
 import { auth } from "../../../utilities/firebase/firebase.config";
 import useApp from "../../../utilities/hook/useApp";
-import {ToastUI} from "react-native-toast-message/lib/src/ToastUI";
-import Toast from "react-native-toast-message";
+
 
 const HEIGHT = Dimensions.get("window").height;
 const Login = ({ navigation }) => {
-  const [checked, setChecked] = React.useState(false);
   const [inputs, setInputs] = React.useState({
     email: "",
     password: "",
