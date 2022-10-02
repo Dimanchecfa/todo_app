@@ -11,6 +11,7 @@ const Tab = createBottomTabNavigator();
 
 const StackNavigation = () => {
   const app = useApp();
+  
   return (
     <NavigationContainer>
       {app?.isSplash ? (

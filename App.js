@@ -8,11 +8,8 @@ import { AppProvider } from './src/utilities/context/app.context';
 import useApp from './src/utilities/hook/useApp';
 
 export default function App() {
-  const app = useApp();
-
-  useEffect(() => {
-   console.log(app?.isSplash);
-  }, []);
+ 
+  
 
 
   return (

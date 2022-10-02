@@ -7,41 +7,19 @@ const AppProvider = ({ children }) => {
   const [isSplash, setIsSplash] = useState(false);
   const [user, setUser] = useState(null);
 
-  const register = (user) => {
-    try {
-      auth
-        .createUserWithEmailAndPassword(user.email, user.password)
-        .then(async (userAuth) => {
-          await userAuth.user.updateProfile({
-            displayName: user.nom,
-          });
-          setUser(userAuth.user);
-          console.log(userAuth);
-        });
-      console.log("ok");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [date , setDate] = useState(new Date());
 
-  const onAuthStateChanged =
-    (auth,
-    (userAuth) => {
-      if (userAuth) {
-        setUser(userAuth);
-      } else {
-        setUser(null);
-      }
-    });
+
+  
 
   const value = {
     isSplash,
     setIsSplash,
     user,
     setUser,
-    register,
+    date,
+    setDate,
 
-    onAuthStateChanged,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

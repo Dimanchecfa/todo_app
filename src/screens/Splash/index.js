@@ -26,10 +26,7 @@ const Splash = () => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => {
-            app.setIsSplash(!app.isSplash);
-            console.log(app.isSplash);
-          }}
+          
           style={{
             backgroundColor: "#ffffff",
             borderRadius: 5,
@@ -48,6 +45,10 @@ const Splash = () => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+        onPress={() => {
+          app.setIsSplash(!app.isSplash);
+          console.log(app.isSplash);
+        }}
           style={{
             backgroundColor: "#ffffff",
             borderRadius: 5,

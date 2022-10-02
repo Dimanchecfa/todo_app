@@ -3,15 +3,21 @@ import {ScrollView, Text, View , StyleSheet} from "react-native";
 import {onSnapshot, collection} from "firebase/firestore";
 import {db} from "../../utilities/firebase/firebase.config";
 import Card from "../../components/Card";
+import useApp from '../../utilities/hook/useApp';
+import { formatDate } from '../../services';
 
 const ActiveTodo = () => { const [todos, setTodos] = React.useState([]);
     const [todoActive, setTodoActive] = React.useState([]);
+    const app = useApp();
     useEffect(() => {
         onSnapshot(collection(db, "todo"), (snapshot) => {
-            setTodoActive(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
+            setTodoActive(snapshot.docs.filter((todo) => formatDate(todo.date) === formatDate(app?.date))
+                .map((doc) =>({...doc.data() , id: doc.id})))
+
+
 
         });
-    }, []);
+    }, [app?.todo]);
 
     return (
         <>

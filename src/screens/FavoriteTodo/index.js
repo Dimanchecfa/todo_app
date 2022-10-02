@@ -3,16 +3,18 @@ import {ScrollView, Text, View , StyleSheet} from "react-native";
 import {onSnapshot, collection , updateDoc, doc} from "firebase/firestore";
 import {db} from "../../utilities/firebase/firebase.config";
 import Card from "../../components/Card";
-import {deleteTodo, handleToogle} from "../../services";
+import {deleteTodo, formatDate, handleToogle} from "../../services";
 
 const FavoriteTodo = () => {
+    const app = useApp();
     const [todoFavorite, setTodoFavorite] = React.useState([]);
     useEffect(() => {
         onSnapshot(collection(db, "todo"), (snapshot) => {
-            setTodoFavorite(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
-
+            setTodoFavorite(snapshot.docs.filter((todo) => formatDate(todo.date) === formatDate(app?.date))
+                .map((doc) =>({...doc.data() ,id : doc.id})))
+               
         });
-    }, []);
+    }, [app?.date])
 
 
 

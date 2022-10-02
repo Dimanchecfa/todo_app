@@ -27,6 +27,7 @@ const HEIGHT = Dimensions.get("window").height;
 const Home = ({navigation}) => {
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const app = useApp();
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -38,10 +39,11 @@ const Home = ({navigation}) => {
 
   const handleConfirm = (date) => {
     console.log("A date has been picked: ", date);
+    app.setDate(date);
     hideDatePicker();
   };
 
-  console.log(isDatePickerVisible);
+  
   return (
     <>
       <SafeAreaView style={styles.container}>

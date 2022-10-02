@@ -1,6 +1,13 @@
-import {updateDoc , doc , deleteDoc} from "firebase/firestore";
+import {updateDoc , doc , deleteDoc, onSnapshot} from "firebase/firestore";
 import {db} from "../utilities/firebase/firebase.config";
 
+export const formatDate = (date) => {
+    const d = new Date(date);
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    const year = d.getFullYear();
+    return [year, month, day].join("-");
+};
 
 export const handleToogle = async(todo) => {
     console.log(todo);
@@ -29,3 +36,5 @@ export const handleFavorite = async (todo) => {
         isFavorite: !todo.isFavorite,
     });
 }
+
+

@@ -21,8 +21,10 @@ const Card = ({
   checked,
   onChange,
   description,
+  handleLiked,
+  isFavorite,
 }) => {
-  const [liked, setLiked] = React.useState(false)
+ 
   const dateFormat = (date) => {
     let days = Math.floor((new Date() - new Date(date)) / (1000 * 3600 * 24))
 
@@ -36,7 +38,7 @@ const Card = ({
   }
   const textFormat = (text) => {
     if (text.length > 50) {
-      return text.slice(0, 50) + '...'
+      return text.slice(0, 50) + '...' 
     } else {
       return text
     }
@@ -59,7 +61,7 @@ const Card = ({
             style={{ marginLeft: 10 , marginBottom: 10}}
           />
           <Pressable
-            onPress={() => setLiked((isLiked) => !isLiked)}
+            onPress={handleLiked}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -68,9 +70,9 @@ const Card = ({
             }}
           >
             <MaterialCommunityIcons
-              name={liked ? 'heart' : 'heart-outline'}
+              name={isFavorite ? 'heart' : 'heart-outline'}
               size={32}
-              color={liked ? 'green' : 'black'}
+              color={isFavorite ? COLORS.red : COLORS.grey}
               
             />
           </Pressable>

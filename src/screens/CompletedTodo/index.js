@@ -1,17 +1,20 @@
 import React, {useEffect} from 'react';
 import {ScrollView, Text, View , StyleSheet} from "react-native";
 import {onSnapshot, collection} from "firebase/firestore";
+import useApp from '../../utilities/hook/useApp';
 import {db} from "../../utilities/firebase/firebase.config";
 import Card from "../../components/Card";
+import { formatDate, handleToogle } from '../../services';
 
-const CompletedTodo = () => { const [todos, setTodos] = React.useState([]);
+const CompletedTodo = () => { 
+   const app = useApp();
     const [todoCompleted, setTodoCompleted] = React.useState([]);
     useEffect(() => {
         onSnapshot(collection(db, "todo"), (snapshot) => {
-            setTodoCompleted(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
-
+            setTodoCompleted(snapshot.docs.filter((todo) => formatDate(todo.date) === formatDate(app?.date))
+                .map((doc) => ({...doc.data() , id: doc.id})))
         });
-    }, []);
+    }, [app?.date]);
 
     return (
         <>
@@ -22,7 +25,7 @@ const CompletedTodo = () => { const [todos, setTodos] = React.useState([]);
                         <Card onPress={() => {}} title={todo.title} onDelete={() => {
                             console.log(todo.id);
                         }} onEdit={() => {}} date={todo.date} key={index} checked={todo.isCompleted} onChange={() => {
-                            console.log(todo.id);
+                            handleToogle(todo) 
                         }}/>
                     ))
                 }
