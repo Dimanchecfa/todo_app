@@ -3,19 +3,23 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Auth/Login";
 import Register from "../screens/Auth/Register";
+import EditTodo from "../screens/EditTodo";
 import Home from "../screens/Home";
 import Splash from "../screens/Splash";
 import useApp from "../utilities/hook/useApp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const StackNavigation = () => {
   const app = useApp();
   
+  
   return (
     <NavigationContainer>
-      {app?.isSplash ? (
-        <Stack.Navigator initialRouteName="Home">
+      {app?.isSplash? (
+        <Stack.Navigator initialRouteName={app?.isSplash? "Home" : "Login"}>
           <Stack.Screen
             name="Register"
             component={Register}
@@ -37,12 +41,24 @@ const StackNavigation = () => {
             name="Login"
             component={Login}
           />
+          <Stack.Screen
+            options={{
+              headerTitle: "Modification",
+              headerTitleAlign: "center",
+
+            }}
+            name="EditTodo"
+            component={EditTodo}
+          />
         </Stack.Navigator>
       ) : (
         <Splash />
       )}
     </NavigationContainer>
   );
-};
+}
+
+          
+
 
 export default StackNavigation;

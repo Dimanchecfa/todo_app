@@ -19,7 +19,8 @@ import AddTodo from "../AddTodo";
 import AllTodo from "../AllTodo";
 import CompletedTodo from "../CompletedTodo";
 import FavoriteTodo from "../FavoriteTodo";
-import Toast from "react-native-toast-message";
+import useApp from "../../utilities/hook/useApp";
+import { formatDate } from "../../services";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +32,7 @@ const Home = ({navigation}) => {
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
+    
   };
 
   const hideDatePicker = () => {
@@ -38,8 +40,9 @@ const Home = ({navigation}) => {
   };
 
   const handleConfirm = (date) => {
-    console.log("A date has been picked: ", date);
+   
     app.setDate(date);
+    console.log(formatDate(date));
     hideDatePicker();
   };
 

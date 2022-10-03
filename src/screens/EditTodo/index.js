@@ -6,18 +6,20 @@ import COLORS from "../../theme/color";
 import {HEIGHT} from "react-native-toast-message/lib/src/components/BaseToast.styles";
 import Button from "../../components/Button";
 import {auth, db} from "../../utilities/firebase/firebase.config";
-import {addDoc, collection} from "firebase/firestore";
+import {addDoc, collection, doc, updateDoc} from "firebase/firestore";
 import Loader from "../../components/Loader";
+import DissmissKeyBoard from "../../components/KeyBoardDismiss";
 
 
-const AddTodo = () => {
+const EditTodo = ({route , navigation}) => {
+
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState({});
     const [inputs, setInputs] = React.useState({
-        title: "",
-        description: "",
-        isCompleted: false,
-        isFavorite: false,
+        title: route.params?.title,       
+        description: route.params?.description,
+        isCompleted: route.params?.isCompleted,
+        isFavorite: route.params?.isFavorite,
     })
     const handleOnchange = (text, input) => {
         setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -40,20 +42,21 @@ const AddTodo = () => {
         const todo = {
             title,
             description,
-            isCompleted : false,
-            isFavorite : false,
             date: new Date().toISOString(),
 
         }
 
         console.log(todo);
         try {
-          await addDoc(collection(db, "todo"), todo);
+          await updateDoc(doc(db, "todo", route.params?.id), todo);
           setLoading(false);
           setInputs(
               inputs.title = "",
                 inputs.description = "",
-          )}
+          )
+          navigation.goBack();
+        }
+         
         catch (e) {
             console.log(e);
             setLoading(false);
@@ -63,11 +66,12 @@ const AddTodo = () => {
 
   return (
     <>
-      <View style={styles.container}>
+     <DissmissKeyBoard>
+     <View style={styles.container}>
           <Text
               style={styles.text}
           >
-              Ajouter une tâche
+             Modifier la tâche
           </Text>
           <View style={styles.view}>
 
@@ -93,11 +97,12 @@ const AddTodo = () => {
 
                 />
 
-              <Button title={"Ajouter"} onPress={validate} />
+              <Button title={"Modifier"} onPress={validate} />
 
           </View>
           <Loader visible={loading} />
       </View>
+     </DissmissKeyBoard>
     </>
   );
 };
@@ -132,4 +137,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddTodo;
+export default EditTodo;

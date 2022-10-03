@@ -7,17 +7,17 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native'
-import { IconButton, Switch } from '@react-native-material/core'
+import { Switch } from '@react-native-material/core';
 import COLORS from '../../theme/color'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
-const HEIGHT = Dimensions.get('window').height
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {formatDescription, formatdescription, formatTitle} from "../../services";
+const HEIGHT = Dimensions.get('window').height;
 const Card = ({
-  onPress,
+ 
   title,
   onDelete,
-  onEdit,
   date,
+  onEdit,
   checked,
   onChange,
   description,
@@ -27,7 +27,6 @@ const Card = ({
  
   const dateFormat = (date) => {
     let days = Math.floor((new Date() - new Date(date)) / (1000 * 3600 * 24))
-
     if (days === 0) {
       return "Aujourd'hui"
     } else if (days === 1) {
@@ -36,17 +35,11 @@ const Card = ({
       return `Il y a ${days} jours`
     }
   }
-  const textFormat = (text) => {
-    if (text.length > 50) {
-      return text.slice(0, 50) + '...' 
-    } else {
-      return text
-    }
-  }
+
 
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={onEdit}
       activeOpacity={0.6}
       style={{
         width: '100%',
@@ -72,30 +65,24 @@ const Card = ({
             <MaterialCommunityIcons
               name={isFavorite ? 'heart' : 'heart-outline'}
               size={32}
-              color={isFavorite ? COLORS.red : COLORS.grey}
+              color={isFavorite ? COLORS.green : COLORS.grey}
               
             />
           </Pressable>
         </View>
         <View style={styles.card_header2}>
           <View style={styles.card_header_header}>
-            <Text style={styles.card_title}>{title}</Text>
-            <Text style={styles.card_header_text}>{textFormat(description)}</Text>
+            <Text style={styles.card_title}>{formatTitle(title)}</Text>
+            <Text style={styles.card_header_text}>{formatDescription(description)}</Text>
           </View>
           <View style={styles.card_header2_footer}>
             <Text style={styles.card_header_text}>{dateFormat(date)}</Text>
           </View>
         </View>
         <View style={styles.card_left}>
-          <TouchableOpacity onPress={onDelete}>
-            <MaterialCommunityIcons
-              name={'pencil'}
-              size={24}
-              color={COLORS.green}
-            />
-          </TouchableOpacity>
+         
 
-          <TouchableOpacity onPress={onEdit}>
+          <TouchableOpacity onPress={onDelete}>
             <MaterialCommunityIcons
               name={'delete'}
               size={24}
@@ -150,7 +137,8 @@ const styles = StyleSheet.create({
     width: '12%',
     height: '100%',
     marginLeft: 20,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    paddingTop: 15,
   },
 
   card_header_header: {

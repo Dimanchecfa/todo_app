@@ -1,23 +1,32 @@
-import { Text } from "@react-native-material/core";
 import React from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useRef} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
 import Loader from "../../../components/Loader";
 import COLORS from "../../../theme/color";
+import { auth } from "../../../utilities/firebase/firebase.config";
 import useApp from "../../../utilities/hook/useApp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const HEIGHT = Dimensions.get("window").height;
-const Register = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const [inputs, setInputs] = React.useState({
-    nom: "",
     email: "",
     password: "",
   });
-  const { register, setUser, user } = useApp();
-  const [loading, setloading] = React.useState(false);
+  const { login, setUser, user } = useApp();
   const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -25,61 +34,50 @@ const Register = ({ navigation }) => {
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
-  const validate = (e) => {
-    const { nom, email, password } = inputs;
+  const validate = async (e) => {
+   
+    setLoading(true);
+    const { email, password } = inputs;
     console.log(inputs);
-    setloading(true);
     let error = {};
-    if (!nom || !email || !password) {
+    if (!email || !password) {
       error = {
-        nom: !nom ? "Votre nom est requis" : "",
-        email: !email ? "Votre email est requis" : "",
-        password: !password ? "Votre mot de passe est requis" : "",
+        email: !email ? "Email is required" : "",
+        password: !password ? "Password is required" : "",
       };
       return setErrors(error);
     }
-
-    const user = {
-      nom,
-      email,
-      password,
-    };
     try {
-      register(user);
-      setloading(false);
-      Alert.alert("Succès", "Votre compte a été créé avec succès" + user.nom);
-      navigation.navigate("Login", { email: user.email });
+      await auth.signInWithEmailAndPassword(email, password);
+      setLoading(false);
+        Alert.alert("Success", "You have successfully logged in");
+        navigation.navigate("Home");
+
+
+
+
+      console.log("Login successful");
     } catch (error) {
-      setloading(false);
-      Alert.alert("Erreur", error.message);
+      console.log(error);
+      setLoading(false);
     }
   };
 
   return (
     <>
       <ScrollView>
-        <SafeAreaView style={styles.area}>
-          <Text style={styles.area_text}>Inscription</Text>
-        </SafeAreaView>
+
+
         <View style={styles.container}>
           <View style={styles.header}>
-            <Input
-              onChangeText={(text) => handleOnchange(text, "nom")}
-              onFocus={() => handleError(null, "nom")}
-              iconName="account-outline"
-              label="Nom complet"
-              placeholder="Enter votre nom complet"
-              error={errors.nom}
-              value={inputs.nom}
-            />
             <Input
               onChangeText={(text) => handleOnchange(text, "email")}
               onFocus={() => handleError(null, "email")}
               iconName="email-outline"
               label="Email"
+              value={inputs.email}
               placeholder="Entrer votre adresse email"
               error={errors.email}
-              value={inputs.email}
             />
             <Input
               onChangeText={(text) => handleOnchange(text, "password")}
@@ -88,14 +86,14 @@ const Register = ({ navigation }) => {
               label="Mot de passe"
               placeholder="Entrer votre mot de passe"
               error={errors.password}
-              password
               value={inputs.password}
+              password
             />
-            <Button title="S'inscrire" onPress={validate} />
+            <Button title="Se connecter" onPress={validate} />
             <Text>
-              J'ai deja un compte!{" "}
+              Je n'ai pas de compte !{" "}
               <Text
-                onPress={() => navigation.navigate("Login")}
+                onPress={() => navigation.navigate("Register") }
                 style={{
                   color: COLORS.green,
                   fontWeight: "bold",
@@ -103,13 +101,14 @@ const Register = ({ navigation }) => {
                   fontSize: 16,
                 }}
               >
-                Se connecter
+                S'inscrire
               </Text>
             </Text>
           </View>
+
         </View>
-        <Loader visible={loading} />
       </ScrollView>
+      <Loader visible={loading} />
     </>
   );
 };
@@ -117,9 +116,9 @@ const Register = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: HEIGHT,
     flexDirection: "column",
     backgroundColor: COLORS.white,
-    height: HEIGHT,
     width: "100%",
   },
   header: {
@@ -150,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Login;
