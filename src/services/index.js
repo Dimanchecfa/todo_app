@@ -55,14 +55,14 @@ export const handleFavorite = async (todo) => {
 }
 
 export const formatTitle = (text) => {
-    if(text.length > 10){
+    if(text?.length > 10){
         return text.substring(0,10) + "...";
     }
     return text;
 }
 
 export const formatDescription = (text) => {
-    if(text.length > 25) {
+    if(text?.length > 25) {
         return text.substring(0 , 20) + "..."
     }
     return text
@@ -75,6 +75,16 @@ export const handleEdit = ({navigation}) => {
 
 export const generateToken = () => {
     return Math.floor(Math.random() * 1000000000);
+}
+
+export const searchTodo = async (query) => {
+    const todoRef = collection(db, "todo");
+    const q = query(todoRef, where("title", "==", query));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+    })
+    app?.setFilter(true);
 }
 
 

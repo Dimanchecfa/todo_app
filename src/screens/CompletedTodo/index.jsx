@@ -10,40 +10,50 @@ import {
   handleFavorite,
   handleToogle,
 } from '../../services'
+import COLORS from '../../theme/color'
+import Spinner from '../../components/Spinner'
 
 const CompletedTodo = ({ navigation }) => {
   const app = useApp()
   const [todoCompleted, setTodoCompleted] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
   useEffect(() => {
     onSnapshot(collection(db, 'todo'), (snapshot) => {
       setTodoCompleted(
         snapshot.docs
-          .filter(
-            (todo) =>
-              formatDate(todo.date) === formatDate(app?.date) &&
-              todo.isCompleted === true,
-          )
-          .map((doc) => ({ ...doc.data(), id: doc.id })),
-
+          
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .filter((todo) => todo.time == formatDate(app?.date) && todo.isCompleted == true),
       )
+      setLoading(false)
       console.log(todoCompleted)
     })
   }, [formatDate(app?.date)])
 
   return (
     <>
-      <ScrollView style={styles.container}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 20 , marginHorizontal: 15}}>
-         Mes Tâches terminées du {
-            formatDate(app?.date) !== formatDate(new Date())
-                ? formatDate(app?.date)
-                : 'jour'
-         }
+      {
+        loading ? <Spinner /> : ( 
+          <ScrollView style={styles.container}>
+        <Text
+          style={{
+            fontSize: 20, marginVertical: 10 , marginHorizontal: 20 ,color : COLORS.black
+          }}
+        >
+          Mes Tâches terminées du{' '}
+          {formatDate(app?.date) !== formatDate(new Date())
+            ? formatDate(app?.date)
+            : 'jour'}
         </Text>
-        {todoCompleted.map((todo, index) => (
+        {
+          todoCompleted.length > 0 ? (
+            todoCompleted
+          
+        .map((todo, index) => (
           <Card
             onPress={() => {}}
             title={todo.title}
+            description = {todo.description}
             onDelete={() => {
               deleteTodo(todo)
             }}
@@ -52,22 +62,36 @@ const CompletedTodo = ({ navigation }) => {
               navigation.navigate('EditTodo', {
                 title: todo?.title,
                 description: todo?.description,
-                date: todo?.date,
+                date: todo?.dates,
                 id: todo?.id,
+                time: todo?.time,
               })
             }}
-            date={todo.date}
+            date={todo.time}
             key={index}
             checked={todo.isCompleted}
             onChange={() => {
               handleToogle(todo)
             }}
-            description={todo.description}
-            isFavorite={todo.isFavorite}
-            handleLiked={() => handleFavorite(todo)}
+
           />
-        ))}
+        )) ) : (
+          <View
+                    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <Text
+                      style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 20 }}
+                    >
+                        Aucune tâche terminée
+                      
+                    </Text>
+                  </View>
+        )
+
+        }
       </ScrollView>
+        )
+      }
     </>
   )
 }

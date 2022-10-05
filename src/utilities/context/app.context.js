@@ -9,6 +9,7 @@ const AppProvider = ({ children }) => {
   const [isSplash, setIsSplash] = useState(false)
   const [user, setUser] = useState(null)
   const [isAuth, setIsAuth] = useState(false)
+  const  [filter , setFilter] = useState(false);
 
   const [date, setDate] = useState(new Date())
   const register = (user) => {
@@ -37,6 +38,8 @@ const AppProvider = ({ children }) => {
     setDate,
     isAuth,
     setIsAuth,
+    filter,
+    setFilter,
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

@@ -4,53 +4,80 @@ import { onSnapshot, collection } from 'firebase/firestore'
 import { db } from '../../utilities/firebase/firebase.config'
 import Card from '../../components/Card'
 import useApp from '../../utilities/hook/useApp'
-import { formatDate } from '../../services'
+import { formatDate, handleToggle } from '../../services'
+import COLORS from '../../theme/color'
+import Spinner from '../../components/Spinner'
 
-const ActiveTodo = () => {
+const ActiveTodo = ({navigation}) => {
   const [todos, setTodos] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
   const [todoActive, setTodoActive] = React.useState([])
   const app = useApp()
   useEffect(() => {
     onSnapshot(collection(db, 'todo'), (snapshot) => {
       setTodoActive(
         snapshot.docs
-          .filter((todo) => formatDate(todo.date) === formatDate(app?.date))
-          .map((doc) => ({ ...doc.data(), id: doc.id })),
+          
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .filter((todo) => todo?.time == formatDate(app?.date)  && todo?.isCompleted == false),
       )
+      setLoading(false)
     })
   }, [formatDate(app?.date)])
 
+
+
   return (
     <>
-      <ScrollView style={styles.container}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 20 }}>
+    {
+      loading ? <Spinner /> : (
+        <ScrollView style={styles.container}>
+        <Text style={{fontSize: 20, marginVertical: 10 , marginHorizontal: 20 ,color : COLORS.black}}>
           Mes taches actives du {
             formatDate(app?.date) === formatDate(new Date()) ? 'jour' : formatDate(app?.date)
           }
           
         </Text>
-        {todoActive
-          .filter((todo) => todo.isCompleted === false)
+        {
+          todoActive.length > 0 ? (
+            todoActive
+         
           .map((todo, index) => (
             <Card
               onPress={() => {}}
               title={todo.title}
+              description={todo.description}
               onDelete={() => {
                 console.log(todo.id)
               }}
               onEdit={() => {
                            
-                navigation.navigate('EditTodo', { title: todo?.title, description: todo?.description, date: todo?.date, id: todo?.id })
+                navigation.navigate('EditTodo', { title: todo?.title, description: todo?.description, date: todo?.dates, id: todo?.id , time : todo?.time})
             }}
-              date={todo.date}
+              date={todo.time}
               key={index}
               checked={todo.isCompleted}
-              onChange={() => {
-                console.log(todo.id)
-              }}
+              onChange={() => handleToggle(todo)}
             />
-          ))}
+          ))
+          ) : (
+            <View
+                    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <Text
+                      style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 20 }}
+                    >
+                        Aucune tâche active
+                      
+                    </Text>
+                  </View>
+          )
+        }
+
       </ScrollView>
+      )
+    }
+      
     </>
   )
 }

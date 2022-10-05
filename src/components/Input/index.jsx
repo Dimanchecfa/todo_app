@@ -2,6 +2,15 @@ import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import COLORS from '../../theme/color';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
+const colors = {
+  themeColor: '#4263ec',
+  white: '#fff',
+  background: '#f4f6fc',
+  greyish: '#a4a4a4',
+  tint: '#2b49c3',
+}
 const Input = ({
   label,
   iconName,
@@ -21,9 +30,12 @@ const Input = ({
         style={[
           style.inputContainer,
           {
-            borderColor: error ? COLORS.red : isFocused ? COLORS.black: COLORS.light,
+            borderColor: error ? COLORS.red : isFocused ? colors.tint : colors.greyish,
             alignItems: isMultiline ? 'flex-start' : 'center',
             height: isMultiline ? 100 : 50,
+            borderRadius : isMultiline ? 10 : 10,
+            borderWidth : 1,
+            width : '100%',
           },
         ]}>
         {
@@ -40,13 +52,13 @@ const Input = ({
             onFocus();
             setIsFocused(true);
           }}
-          onBlur={() => setIsFocused(false)}
+          onBlur={() => setIsFocused(!isFocused)}
           secureTextEntry={hidePassword}
           multiline={isMultiline}
           numberOfLines={isMultiline ? 5 : 1}
 
          
-          style={{color: COLORS.black, flex: 1 ,}}
+          style={{color: COLORS.black, fontSize: 18, width: '100%'}}
 
           {...props}
         />
@@ -75,9 +87,9 @@ const style = StyleSheet.create({
   },
   inputContainer: {
     
-    backgroundColor: COLORS.light,
+    backgroundColor: colors.white,
     flexDirection: 'row',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     borderWidth: 0.5,
   },
 });

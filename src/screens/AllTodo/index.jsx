@@ -7,6 +7,8 @@ import { db } from '../../utilities/firebase/firebase.config'
 import { deleteTodo, formatDate, handleEdit, handleFavorite, handleToggle } from '../../services'
 import { format } from 'prettier'
 import Spinner from '../../components/Spinner'
+import { color } from 'react-native-reanimated'
+import COLORS from '../../theme/color'
 
 const AllTodo = ({ navigation }) => {
   const app = useApp()
@@ -17,7 +19,7 @@ const AllTodo = ({ navigation }) => {
       setTodos(
         snapshot.docs
           .map((doc) => ({ ...doc.data(), id: doc.id }))
-          .filter((task) => formatDate(task.date) == formatDate(app?.date)),
+          .filter((todo) => todo?.time == formatDate(app?.date)),
       )
         setLoading(false)
 
@@ -31,11 +33,13 @@ const AllTodo = ({ navigation }) => {
 
   }, [formatDate(app?.date)])
 
+ 
+
   return (
     <>
         {
             loading ? <Spinner /> : ( <ScrollView>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginVertical: 30 , marginHorizontal: 20 }}>
+                <Text style={{ fontSize: 20, marginVertical: 10 , marginHorizontal: 20 ,color : COLORS.black}}>
                  Les tâches du{' '}
                   {formatDate(app?.date) !== formatDate(new Date())
                     ? formatDate(app?.date)
@@ -51,15 +55,14 @@ const AllTodo = ({ navigation }) => {
                         onEdit={() => {
                            
                             console.log(todo)
-                            navigation.navigate('EditTodo', { title: todo?.title, description: todo?.description, date: todo?.date, id: todo?.id })
+                            navigation.navigate('EditTodo', { title: todo?.title, description: todo?.description, date: todo?.dates, id: todo?.id , time : todo?.time})
                         }}
                       description={todo?.description}
-                      date={todo?.date}
+                      date={todo?.time}
                       key={index}
                       checked={todo?.isCompleted}
                       onChange={() => handleToggle(todo)}
-                      isFavorite={todo?.isFavorite}
-                      handleLiked={() => handleFavorite(todo)}
+                     
                     />
                   ))
                 ) : (

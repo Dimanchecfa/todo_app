@@ -44,16 +44,13 @@ const DateInput = ({
             borderColor: error
               ? COLORS.red
               : isFocused
-              ? COLORS.darkBlue
-              : COLORS.light,
+              ? COLORS.tint
+              : COLORS.greyish,
             alignItems: 'center',
           },
         ]}>
-        <Icon
-          name={iconName}
-          style={{color: COLORS.darkBlue, fontSize: 22, marginRight: 10}}
-        />
-        <TextInput
+        
+        <Text
           autoCorrect={false}
           onFocus={() => {
             onFocus();
@@ -63,8 +60,10 @@ const DateInput = ({
           onBlur={() => setIsFocused(false)}
           style={{color: COLORS.darkBlue, flex: 1}}
           {...props}
-        />
-        {date && (
+        >
+          
+        </Text>
+       
             <Icon
             onPress={showDatePicker}
             name={ 'calendar'}
@@ -72,7 +71,7 @@ const DateInput = ({
 
           />
        
-        )}
+      
       </View>
       {error && (
         <Text style={{marginTop: 7, color: COLORS.red, fontSize: 12}}>

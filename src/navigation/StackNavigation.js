@@ -9,6 +9,7 @@ import Splash from "../screens/Splash";
 import useApp from "../utilities/hook/useApp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import AddTodo from "../screens/AddTodo";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,14 @@ const StackNavigation = () => {
             }}
             name="EditTodo"
             component={EditTodo}
+          />
+          <Stack.Screen
+            options={{
+              headerTitle: "Ajout",
+              headerTitleAlign: "center",
+            }}
+            name="AddTodo"
+            component={AddTodo}
           />
         </Stack.Navigator>
       ) : (

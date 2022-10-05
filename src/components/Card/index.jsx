@@ -13,7 +13,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {formatDescription, formatdescription, formatTitle} from "../../services";
 const HEIGHT = Dimensions.get('window').height;
 const Card = ({
- 
   title,
   onDelete,
   date,
@@ -21,18 +20,17 @@ const Card = ({
   checked,
   onChange,
   description,
-  handleLiked,
-  isFavorite,
 }) => {
  
   const dateFormat = (date) => {
     let days = Math.floor((new Date() - new Date(date)) / (1000 * 3600 * 24))
-    if (days === 0) {
-      return "Aujourd'hui"
-    } else if (days === 1) {
-      return 'Il y a 1 jour'
-    } else if (days > 1) {
-      return `Il y a ${days} jours`
+    if(days == 0){
+      return 'il reste 1 jour'
+    }else if(days == 0){
+      return days * 24 + ' heures'
+    }
+    else if(days < 0){
+      return 'dépassé'
     }
   }
 
@@ -43,116 +41,80 @@ const Card = ({
       activeOpacity={0.6}
       style={{
         width: '100%',
-        marginTop: 15,
+        marginTop: 8,
         alignItems: 'center',
         borderRadius: 8,
       }}
     >
-      <View style={styles.card}>
-        <View style={styles.card_header}>
-          <Switch value={checked} onValueChange={onChange}
-            style={{ marginLeft: 10 , marginBottom: 10}}
-          />
-          <Pressable
-            onPress={handleLiked}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 27,
-              marginLeft: 10,
-            }}
-          >
-            <MaterialCommunityIcons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={32}
-              color={isFavorite ? COLORS.green : COLORS.grey}
-              
-            />
-          </Pressable>
-        </View>
-        <View style={styles.card_header2}>
-          <View style={styles.card_header_header}>
-            <Text style={styles.card_title}>{formatTitle(title)}</Text>
-            <Text style={styles.card_header_text}>{formatDescription(description)}</Text>
-          </View>
-          <View style={styles.card_header2_footer}>
-            <Text style={styles.card_header_text}>{dateFormat(date)}</Text>
-          </View>
-        </View>
-        <View style={styles.card_left}>
-         
+      <View style={styles.container}>
+            <View style={styles.card1}>
+                <Text style={styles.title}>
+                  {formatTitle(title)}
+                </Text>
+                <Text style={styles.description}>
+                  {formatDescription(description)}
+                </Text>
+                <Text style={styles.date}>
+                  {date}
+                </Text>
+            </View>
+            <View style={styles.card2}>
+                <Switch value={checked} onValueChange={onChange} style={{marginLeft: 10, marginBottom: 10}} />
+                <TouchableOpacity onPress={onDelete} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <MaterialCommunityIcons name={'delete'} size={30} color={COLORS.tint} />
+                </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity onPress={onDelete}>
-            <MaterialCommunityIcons
-              name={'delete'}
-              size={24}
-              color={COLORS.green}
-            />
-          </TouchableOpacity>
+            
         </View>
-      </View>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: '90%',
-    marginHorizontal: '5%',
-    height: HEIGHT * 0.16,
-    backgroundColor: 'white',
-    borderRadius: 5,
+  container: {
+      backgroundColor : '#fff',
+      flexDirection : 'row',
+      marginHorizontal : 20,
+      marginVertical : 10,
+      borderRadius : 10,
+      paddingVertical : 7,
+      paddingHorizontal : 10,
+      justifyContent : 'space-between',
+      elevation : 5,
 
-    display: 'flex',
-    flexDirection: 'row',
   },
-  card_header: {
-    width: '15%',
-    height: '80%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+  title : {
+      fontSize : 20,
+      fontWeight : 'bold',
+     
   },
-  card_header2: {
-    marginTop: 15,
-    marginLeft: 5,
-    width: '65%',
-    height: '100%',
+  description : {
+      fontSize : 15,
+      color : '#000',
   },
+  date : {
+      fontSize : 15,
+      color : COLORS.greyish,
+      marginTop : 20,
+      textDecorationLine : 'underline',
+  },
+  card1 : {
+      flexDirection : 'column',
+      width : '80%',
+      marginLeft : 10,
+  },
+  card2 : {
+      flexDirection : 'column',
+      justifyContent : 'space-between',
+      alignItems : 'center',
+      flex : 1,
+  },
+  
+      
 
-  card_header2_footer: {
-    width: '65%',
-    height: '25%',
 
-    marginTop: 12,
-
-    backgroundColor: COLORS.white,
-    borderRadius: 20,
-    borderColor: COLORS.green,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card_left: {
-    width: '12%',
-    height: '100%',
-    marginLeft: 20,
-    justifyContent: 'flex-start',
-    paddingTop: 15,
-  },
-
-  card_header_header: {
-    width: '100%',
-    height: '50%',
-    
-  },
-  card_title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  card_header_text: {
-    fontSize: 17,
-  }
 })
+
 
 export default Card
