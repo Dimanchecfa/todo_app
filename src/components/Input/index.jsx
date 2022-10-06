@@ -24,7 +24,8 @@ const Input = ({
   const [isFocused, setIsFocused] = React.useState(false);
   
   return (
-    <View style={{marginBottom: 20}}>
+   <>
+     <View style={{marginBottom: 20}}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[
@@ -35,7 +36,7 @@ const Input = ({
             height: isMultiline ? 100 : 50,
             borderRadius : isMultiline ? 10 : 10,
             borderWidth : 1,
-            width : '100%',
+            
           },
         ]}>
         {
@@ -56,9 +57,10 @@ const Input = ({
           secureTextEntry={hidePassword}
           multiline={isMultiline}
           numberOfLines={isMultiline ? 5 : 1}
+          
 
          
-          style={{color: COLORS.black, fontSize: 18, width: '100%'}}
+          style={{color: COLORS.black, fontSize: 18 , width: '80%'}}
 
           {...props}
         />
@@ -66,7 +68,7 @@ const Input = ({
           <Icon
             onPress={() => setHidePassword(!hidePassword)}
             name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
-            style={{color: COLORS.black, fontSize: 22}}
+            style={{color: COLORS.black, fontSize: 22 }}
           />
         )}
       </View>
@@ -76,6 +78,7 @@ const Input = ({
         </Text>
       )}
     </View>
+   </>
   );
 };
 
@@ -91,6 +94,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     borderWidth: 0.5,
+   
   },
 });
 

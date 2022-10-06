@@ -1,12 +1,16 @@
 import { Text } from "@react-native-material/core";
 import React from "react";
-import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { Image } from "react-native";
+import { Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../../components/Button";
 import Input from "../../../components/Input";
 import Loader from "../../../components/Loader";
 import COLORS from "../../../theme/color";
 import useApp from "../../../utilities/hook/useApp";
+import GoogleSVG from '../../../../assets/gg.png'
+import FacebookSVG from '../../../../assets/facebook.png';
+import GithubSVG from '../../../../assets/github.png';
 
 const HEIGHT = Dimensions.get("window").height;
 const Register = ({ navigation }) => {
@@ -15,7 +19,7 @@ const Register = ({ navigation }) => {
     email: "",
     password: "",
   });
-  const { register, setUser, user } = useApp();
+  const { register,} = useApp();
   const [loading, setloading] = React.useState(false);
   const [errors, setErrors] = React.useState({});
   const handleOnchange = (text, input) => {
@@ -50,7 +54,6 @@ const Register = ({ navigation }) => {
 
       setloading(false);
       Alert.alert("Succès", "Votre compte a été créé avec succès" + user.nom);
-      navigation.navigate("Login", { email: user.email });
     } catch (error) {
       setloading(false);
       Alert.alert("Erreur", error.message);
@@ -60,9 +63,6 @@ const Register = ({ navigation }) => {
   return (
     <>
       <ScrollView>
-        <SafeAreaView style={styles.area}>
-          <Text style={styles.area_text}>Inscription</Text>
-        </SafeAreaView>
         <View style={styles.container}>
           <View style={styles.header}>
             <Input
@@ -99,7 +99,7 @@ const Register = ({ navigation }) => {
               <Text
                 onPress={() => navigation.navigate("Login")}
                 style={{
-                  color: COLORS.green,
+                  color: COLORS.themeColor,
                   fontWeight: "bold",
                   textAlign: "center",
                   fontSize: 16,
@@ -109,6 +109,52 @@ const Register = ({ navigation }) => {
               </Text>
             </Text>
           </View>
+          <Text style={{ textAlign: "center", fontSize: 16, marginTop: 20 }}>
+            Ou inscrivez-vous avec
+          </Text>
+          <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 30,
+            marginTop: 20,
+            paddingHorizontal: 20,
+          }}>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={{
+              borderColor: '#ddd',
+              borderWidth: 2,
+              borderRadius: 10,
+              paddingHorizontal: 30,
+              paddingVertical: 10,
+            }}>
+            <Image source={GoogleSVG} style={{width: 30, height: 30}} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={{
+              borderColor: '#ddd',
+              borderWidth: 2,
+              borderRadius: 10,
+              paddingHorizontal: 30,
+              paddingVertical: 10,
+            }}>
+            <Image source={FacebookSVG} style={{width: 30, height: 30}} />
+           
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {}}
+            style={{
+              borderColor: '#ddd',
+              borderWidth: 2,
+              borderRadius: 10,
+              paddingHorizontal: 30,
+              paddingVertical: 10,
+            }}>
+            <Image source={GithubSVG} style={{width: 30, height: 30}} />
+          </TouchableOpacity>
+        </View>
         </View>
         <Loader visible={loading} />
       </ScrollView>

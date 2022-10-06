@@ -61,6 +61,8 @@ const Home = ({ navigation }) => {
             <TouchableOpacity onPress={showDatePicker}>
               <Icon name="calendar" size={30} style={{ color: colors.white }} />
             </TouchableOpacity>
+            
+
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => {
@@ -83,6 +85,11 @@ const Home = ({ navigation }) => {
                   style={{ color: colors.themeColor }}
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+              navigation.navigate('Profil')
+            }}>
+              <Icon name="account" size={30} style={{ color: colors.white }} />
+            </TouchableOpacity>
             </View>
           </View>
           <View style={{ padding: 10 }}>

@@ -18,8 +18,6 @@ import Loader from '../../components/Loader'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import DissmissKeyBoard from '../../components/KeyBoardDismiss'
-import DateInput from '../../components/DateInput'
-import Carde from '../../components/Carde'
 import { formatDate } from '../../services'
 
 const AddTodo = () => {

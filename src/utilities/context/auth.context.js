@@ -5,20 +5,12 @@ import { auth } from '../firebase/firebase.config';
 
 const AuthContext = createContext(null);
 const AuthProvider = ({children}) => {
-    const [isAuth , setIsAuth] = React.useState(false);
-    const [user , setUser] = React.useState(null);
-
-    onAuthStateChanged(auth , (currentUser) => {
-        setUser(currentUser);
-        setIsAuth(true);
-    
-})
+    const [text , setText] = useState('hello world')
     const value = {
-        isAuth,
-        setIsAuth,
-        user,
-        setUser,
+        text,
+        setText
     }
+   
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
