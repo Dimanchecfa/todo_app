@@ -23,6 +23,7 @@ import GithubSVG from '../../../../assets/github.png'
 import { Image } from 'react-native'
 import useApp from '../../../utilities/hook/useApp'
 
+
 const HEIGHT = Dimensions.get('window').height
 const Login = ({ navigation }) => {
   const app = useApp()
@@ -32,6 +33,7 @@ const Login = ({ navigation }) => {
   })
   const { login, setUser, user } = useApp()
   const [errors, setErrors] = React.useState({})
+  const [message , setMessage] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }))
@@ -41,7 +43,8 @@ const Login = ({ navigation }) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }))
   }
   const validate = async (e) => {
-    setLoading(true)
+
+   
     const { email, password } = inputs
     console.log(inputs)
     let error = {}
@@ -52,22 +55,42 @@ const Login = ({ navigation }) => {
       }
       return setErrors(error)
     }
+    else {
+      if(!email.includes('@') || !email.includes('.') || password.length < 6){
+        error = {
+          email: 'Email invalide',
+          password: 'Votre mot de passe doit contenir au moins 6 caractères'
+        }
+        return setErrors(error)
+      }
+        
+    }
     const user = {
       email,
       password,
     }
+    setLoading(true);
 
     try {
-      login(user)
-      console.log('ok')
-      setTimeout(() => {
-        setLoading(false)
+    await auth.signInWithEmailAndPassword(user.email, user.password).then((userAuth) => {
+        const userData = {
+          email: userAuth.user.email,
+          uid: userAuth.user.uid,
+          nom: userAuth.user.displayName,
+        };
+        AsyncStorage.setItem('user' ,  JSON.stringify(userData));
       }
-      , 2000)
-      
-    } catch (error) {
-      console.log(error)
+      )
       setLoading(false)
+
+      
+      
+    }catch (error) {
+      setLoading(false)
+     error = {
+        message : "Email ou mot de passe incorrect"
+      }
+      setErrors(error)
     }
   }
   
@@ -77,7 +100,25 @@ const Login = ({ navigation }) => {
       <StatusBar barStyle="light-content" backgroundColor={COLORS.themeColor} />
       <ScrollView>
         <View style={styles.container}>
+         
+            
+              
+         
           <View style={styles.header}>
+          <View style={{
+            justifyContent: 'center',
+            flex: -2,
+            marginBottom: 5,
+            alignItems :'center'
+          }}>
+          <Text style={{
+                fontSize: 15,
+                color: 'red',
+              }}>
+                {errors.message}
+              </Text>
+          </View>
+        
             <Input
               onChangeText={(text) => handleOnchange(text, 'email')}
               onFocus={() => handleError(null, 'email')}
@@ -138,7 +179,7 @@ const Login = ({ navigation }) => {
               <Image source={GoogleSVG} style={{ width: 30, height: 30 }} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => handleGoogleLogin()}
+              onPress={() => {}}
               style={{
                 borderColor: '#ddd',
                 borderWidth: 2,

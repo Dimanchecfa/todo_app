@@ -16,6 +16,8 @@ import ActiveTodo from '../ActiveTodo'
 import AllTodo from '../AllTodo'
 import CompletedTodo from '../CompletedTodo'
 import useApp from '../../utilities/hook/useApp'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { auth } from '../../utilities/firebase/firebase.config'
 
 const Tab = createMaterialTopTabNavigator()
 const colors = {
@@ -30,6 +32,7 @@ const HEIGHT = Dimensions.get('window').height
 const Home = ({ navigation }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [filterString, setFilterString] = useState('')
+  const [user , setUser] = useState('')
   const app = useApp()
 
   const showDatePicker = () => {
@@ -45,6 +48,37 @@ const Home = ({ navigation }) => {
     console.log(app.date)
     hideDatePicker()
   }
+  const getUser = async () => {
+    auth.onAuthStateChanged((userAuth) => {
+        if (userAuth) {
+          const user = {
+            nom : userAuth.displayName,
+            email: userAuth.email,
+            uid : userAuth.uid
+          }
+         setUser(user)
+        }
+      
+    })
+    const userData = await AsyncStorage.getItem('user')
+    setUser(JSON.parse(userData))
+  }
+  React.useEffect(() => {
+    auth.onAuthStateChanged((userAuth) => {
+        if (userAuth) {
+          const user = {
+            nom : userAuth.displayName,
+            email: userAuth.email,
+            uid : userAuth.uid
+          }
+         setUser(user)
+        }
+        
+      }
+    )
+      
+    
+  }, [])
 
   return (
     <>
@@ -94,7 +128,11 @@ const Home = ({ navigation }) => {
           </View>
           <View style={{ padding: 10 }}>
             <Text style={{ color: colors.white, fontSize: 30 }}>
-              {`Salut, \nDimanche`}
+              {
+                user.nom == null ? 'Bienvenue' : `Salut, \n${
+                  user.nom
+                 }`
+              }
             </Text>
             <View style={styles.form}>
               <TextInput

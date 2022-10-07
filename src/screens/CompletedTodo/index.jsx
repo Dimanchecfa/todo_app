@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, Text, View, StyleSheet } from 'react-native'
 import { onSnapshot, collection } from 'firebase/firestore'
 import useApp from '../../utilities/hook/useApp'
 import { db } from '../../utilities/firebase/firebase.config'
 import Card from '../../components/Card'
-import { deleteTodo, formatDate, handleToogle } from '../../services'
+import { deleteTodo, formatDate, handleToggle, handleToogle } from '../../services'
 import COLORS from '../../theme/color'
 import Spinner from '../../components/Spinner'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const CompletedTodo = ({ navigation }) => {
   const app = useApp()
-  const [todoCompleted, setTodoCompleted] = React.useState([])
-  const [loading, setLoading] = React.useState(true)
+  const [todoCompleted, setTodoCompleted] = useState([])
+  const [loading, setLoading] = useState(true)
+
+ 
   useEffect(() => {
     onSnapshot(collection(db, 'todo'), (snapshot) => {
       setTodoCompleted(
@@ -20,7 +23,7 @@ const CompletedTodo = ({ navigation }) => {
           .map((doc) => ({ ...doc.data(), id: doc.id }))
           .filter(
             (todo) =>
-              todo.time == formatDate(app?.date) && todo.isCompleted == true,
+              todo.time == formatDate(app?.date) && todo.isCompleted == true 
           ),
       )
       setLoading(false)
@@ -69,9 +72,7 @@ const CompletedTodo = ({ navigation }) => {
                 date={todo.time}
                 key={index}
                 checked={todo?.isCompleted}
-                onChange={() => {
-                  handleToogle(todo)
-                }}
+                onChange={() => handleToggle(todo)}
               />
             ))
           ) : (

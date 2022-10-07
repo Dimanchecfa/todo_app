@@ -4,16 +4,15 @@ import Card from '../../components/Card'
 import useApp from '../../utilities/hook/useApp'
 import { onSnapshot, collection } from 'firebase/firestore'
 import { db } from '../../utilities/firebase/firebase.config'
-import { deleteTodo, formatDate, handleEdit, handleFavorite, handleToggle } from '../../services'
-import { format } from 'prettier'
+import { deleteTodo, formatDate, handleToggle } from '../../services'
 import Spinner from '../../components/Spinner'
-import { color } from 'react-native-reanimated'
 import COLORS from '../../theme/color'
 
 const AllTodo = ({ navigation }) => {
   const app = useApp()
   const [todos, setTodos] = React.useState([])
   const [loading , setLoading] = React.useState(true)
+
   useEffect(() => {
     onSnapshot(collection(db, 'todo'), (snapshot) => {
       setTodos(

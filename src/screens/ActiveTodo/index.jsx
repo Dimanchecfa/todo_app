@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, Text, View, StyleSheet } from 'react-native'
 import { onSnapshot, collection } from 'firebase/firestore'
 import { db } from '../../utilities/firebase/firebase.config'
@@ -9,10 +9,10 @@ import COLORS from '../../theme/color'
 import Spinner from '../../components/Spinner'
 
 const ActiveTodo = ({navigation}) => {
-  const [todos, setTodos] = React.useState([])
-  const [loading, setLoading] = React.useState(true)
-  const [todoActive, setTodoActive] = React.useState([])
+  const [loading, setLoading] = useState(true)
+  const [todoActive, setTodoActive] = useState([])
   const app = useApp()
+  
   useEffect(() => {
     onSnapshot(collection(db, 'todo'), (snapshot) => {
       setTodoActive(
